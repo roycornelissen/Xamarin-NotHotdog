@@ -1,8 +1,9 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NotHotdog.ViewModels;
 using Xamarin.Forms;
 
 namespace NotHotdog
@@ -12,6 +13,9 @@ namespace NotHotdog
         public MainPage()
         {
             InitializeComponent();
+
+            MainViewModel vm = new MainViewModel();
+            BindingContext = vm;
         }
     }
 }

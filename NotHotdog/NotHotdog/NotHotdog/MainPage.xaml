@@ -1,11 +1,49 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:NotHotdog"
+             xmlns:converters="clr-namespace:NotHotdog.Converters"
              x:Class="NotHotdog.MainPage">
-    <StackLayout BackgroundColor="Yellow">
-        <Label Text="Welcome to Xamarin Forms!" TextColor="Black"
-               VerticalOptions="Center" 
-               HorizontalOptions="Center" />
-    </StackLayout>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:InvertBooleanConverter x:Key="invertBooleanConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Image Source="{Binding Picture}" Grid.Row="1" Grid.RowSpan="3" Aspect="AspectFill"/>
+        <Grid Grid.Row="0" IsVisible="{Binding Scanned}">
+            <StackLayout BackgroundColor="Lime" IsVisible="{Binding Hotdog.Hotdog}" Padding="20">
+                <Label HorizontalTextAlignment="Center" FontSize="50" TextColor="Yellow">Hotdog!</Label>
+            </StackLayout>
+
+            <StackLayout BackgroundColor="Red" IsVisible="{Binding Hotdog.Hotdog, Converter={StaticResource invertBooleanConverter}}" Padding="10">
+                <Label HorizontalTextAlignment="Center" FontSize="50" TextColor="Yellow">Not Hotdog!</Label>
+                <Label Text="my guess it's" TextColor="White" HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding Hotdog.Description}" TextColor="White" HorizontalTextAlignment="Center"/>
+            </StackLayout>
+        </Grid>
+
+        <StackLayout Grid.Row="0" BackgroundColor="Black" IsVisible="{Binding Error}">
+            <Label Text="Error processing image. try again" TextColor="White" HorizontalTextAlignment="Center"/>
+        </StackLayout>
+        
+        <StackLayout Grid.Row="3">
+            <Button Text="Scan food" Command="{Binding CheckImageCommand}"/>
+        </StackLayout>
+
+        <Grid BackgroundColor="Black" IsVisible="{Binding IsBusy}" Grid.RowSpan="4"> 
+            <StackLayout VerticalOptions="Center">
+                <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" Color="Red"/>
+                <Label Text="Evaluating" TextColor="Red" HorizontalTextAlignment="Center"/>
+            </StackLayout>
+        </Grid>
+    </Grid>
 </ContentPage>
