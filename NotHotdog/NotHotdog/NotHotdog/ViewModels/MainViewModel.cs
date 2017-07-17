@@ -62,16 +62,21 @@ namespace NotHotdog.ViewModels
             {
                 Error = false;
                 Scanned = false;
-				await CrossMedia.Current.Initialize();
+                await CrossMedia.Current.Initialize();
 
 				if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
 				{
+                    if(!CrossMedia.Current.IsPickPhotoSupported)
+                    {
+                        
+                    }
 					return;
 				}
 
                 IsBusy = true;
 				var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
-				{
+                {   
+                    CustomPhotoSize=50,
 					Directory = "Sample",
 					Name = "test.jpg"
 				});
