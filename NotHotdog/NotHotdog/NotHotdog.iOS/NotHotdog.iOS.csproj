@@ -93,8 +93,6 @@
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <ITunesArtwork Include="iTunesArtwork" />
-    <ITunesArtwork Include="iTunesArtwork@2x" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +122,7 @@
     <BundleResource Include="Resources\Icon-App-83.5x83.5%402x.png" />
     <BundleResource Include="Resources\Icon-Small-50x50%401x.png" />
     <BundleResource Include="Resources\Icon-Small-50x50%402x.png" />
+    <BundleResource Include="Resources\2048.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -166,9 +165,6 @@
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Default.png" />
-    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Default%402x.png" />
-    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Default-568h%402x.png" />
     <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Default-Portrait.png" />
     <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Default-Portrait%402x.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
@@ -187,6 +183,18 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-App-76x76%401x.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-App-76x76%402x.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-App-83.5x83.5%402x.png" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\phone.png" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\iPadHorizontal.png" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\iPadVertical.png" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\ipad-portrait-1x.png" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\ipad-landscape-1x.png" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\iphone-2x.png" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\iphone-retina4.png" />
+    <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\iphone-retina4.7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ITunesArtwork Include="iTunesArtwork" />
+    <ITunesArtwork Include="iTunesArtwork%402x" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.5.256-pre6\build\netstandard1.0\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.5.256-pre6\build\netstandard1.0\Xamarin.Forms.targets')" />
