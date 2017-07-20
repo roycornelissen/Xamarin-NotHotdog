@@ -18,6 +18,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <Image Source="bgimage.jpg" Grid.Row="0" Grid.RowSpan="4" Aspect="AspectFill"/>
         <Image Source="{Binding Picture}" Grid.Row="1" Grid.RowSpan="3" Aspect="AspectFill"/>
         <Grid Grid.Row="0" IsVisible="{Binding Scanned}">
             <StackLayout BackgroundColor="Lime" IsVisible="{Binding Hotdog.Hotdog}" Padding="20">

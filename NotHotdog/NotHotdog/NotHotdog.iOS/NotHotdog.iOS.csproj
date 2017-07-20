@@ -99,7 +99,6 @@
     <BundleResource Include="Resources\Icon-60%403x.png" />
     <BundleResource Include="Resources\Icon-Small-40%403x.png" />
     <BundleResource Include="Resources\Icon-Small%403x.png" />
-    <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
     <BundleResource Include="Resources\Icon-App-20x20%401x.png" />
     <BundleResource Include="Resources\Icon-App-20x20%402x.png" />
     <BundleResource Include="Resources\Icon-App-20x20%403x.png" />
@@ -123,6 +122,7 @@
     <BundleResource Include="Resources\Icon-Small-50x50%401x.png" />
     <BundleResource Include="Resources\Icon-Small-50x50%402x.png" />
     <BundleResource Include="Resources\2048.png" />
+    <BundleResource Include="Resources\bgimage.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
