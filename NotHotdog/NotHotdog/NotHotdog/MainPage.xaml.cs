@@ -16,6 +16,10 @@ namespace NotHotdog
 
             MainViewModel vm = new MainViewModel();
             BindingContext = vm;
+
+            photoButton.Text = "\uf030";
+            shareButton.Text = "\uf1e0";
+            codeButton.Text = "\uf09b";
         }
     }
 }

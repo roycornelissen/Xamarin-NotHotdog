@@ -1,10 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NotHotdog.App">
     <Application.Resources>
 
-        <!-- Application resource dictionary -->
+        <ResourceDictionary>
 
+            <OnPlatform x:TypeArguments="x:String" x:Key="IconFonts">
+                <OnPlatform.iOS>FontAwesome</OnPlatform.iOS>
+                <OnPlatform.Android>fontawesome-webfont.ttf#FontAwesome-Regular</OnPlatform.Android>
+            </OnPlatform>
+            
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="#25C38E"/>
+                <Setter Property="FontSize" Value="30"/>
+                <Setter Property="HorizontalOptions" Value="Start"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="BorderRadius" Value="20"/>
+                <Setter Property="BorderWidth" Value="1"/>
+                <Setter Property="BackgroundColor" Value="White"/>
+                <Setter Property="HeightRequest" Value="40"/>
+                <Setter Property="BorderColor" Value="White"/>
+                <Setter Property="WidthRequest" Value="40"/>
+                <Setter Property="FontFamily" Value="{StaticResource IconFonts}" />
+            </Style>
+        </ResourceDictionary>
+        
     </Application.Resources>
 </Application>

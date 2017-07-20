@@ -123,6 +123,9 @@
     <BundleResource Include="Resources\Icon-Small-50x50%402x.png" />
     <BundleResource Include="Resources\2048.png" />
     <BundleResource Include="Resources\bgimage.jpg" />
+    <BundleResource Include="Resources\fontawesome-webfont.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -16,7 +16,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
         <Image Source="bgimage.jpg" Grid.Row="0" Grid.RowSpan="4" Aspect="AspectFill"/>
         <Image Source="{Binding Picture}" Grid.Row="1" Grid.RowSpan="3" Aspect="AspectFill"/>
@@ -38,8 +38,9 @@
         
         <StackLayout Grid.Row="3">
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                <Button HorizontalOptions="Start" Text="Scan food" Command="{Binding CheckImageCommand}" BorderRadius="20" BorderWidth="1" BackgroundColor="Green" BorderColor="Red" HeightRequest="80" WidthRequest="80"></Button>
-                <Button HorizontalOptions="Start" Text="Pick Photo" Command="{Binding CheckImageCommand}" BorderRadius="40" BorderWidth="1" BackgroundColor="Green" HeightRequest="80" BorderColor="Blue" WidthRequest="80"/>
+                <Button x:Name="shareButton" Text="Pick Photo" Command="{Binding CheckImageCommand}"  Style="{StaticResource ButtonStyle}"/>
+                <Button x:Name="photoButton" HorizontalOptions="Start" Command="{Binding CheckImageCommand}" Style="{StaticResource ButtonStyle}" BorderRadius="40" HeightRequest="80" BorderColor="White" WidthRequest="80"/>
+                <Button x:Name="codeButton" Text="Pick Photo" Command="{Binding CheckImageCommand}" Style="{StaticResource ButtonStyle}"/>
             </StackLayout>
         </StackLayout>
 
