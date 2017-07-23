@@ -20,6 +20,7 @@ namespace NotHotdog
             photoButton.Text = "\uf030";
             shareButton.Text = "\uf1e0";
             codeButton.Text = "\uf09b";
+            imageButton.Text = "\uf1c5";
         }
     }
 }

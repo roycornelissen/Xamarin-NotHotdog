@@ -11,6 +11,8 @@ using NotHotdog.Model;
 using Plugin.Media;
 using Xamarin.Forms;
 using System.Linq;
+using Plugin.Share;
+using Plugin.Share.Abstractions;
 
 namespace NotHotdog.ViewModels
 {
@@ -20,43 +22,44 @@ namespace NotHotdog.ViewModels
         {
         }
 
-        RecognizedHotdog hotdog = new RecognizedHotdog() { Hotdog = false};
-		public RecognizedHotdog Hotdog
-		{
+        RecognizedHotdog hotdog = new RecognizedHotdog() { Hotdog = false };
+        public RecognizedHotdog Hotdog
+        {
             get { return hotdog; }
             set { SetProperty(ref hotdog, value); }
-		}
+        }
 
-		bool scanned;
-		public bool Scanned
-		{
-			get { return scanned; }
-			set { SetProperty(ref scanned, value); }
-		}
+        bool scanned;
+        public bool Scanned
+        {
+            get { return scanned; }
+            set { SetProperty(ref scanned, value); }
+        }
 
-		bool error;
-		public bool Error
-		{
-			get { return error; }
-			set { SetProperty(ref error, value); }
-		}
+        bool error;
+        public bool Error
+        {
+            get { return error; }
+            set { SetProperty(ref error, value); }
+        }
 
         ImageSource picture;
         public ImageSource Picture
         {
             get { return picture; }
-            set {SetProperty(ref picture, value); }
+            set { SetProperty(ref picture, value); }
         }
 
+        #region commands 
 
-		ICommand checkImageCommand;
-		public ICommand CheckImageCommand =>
-			checkImageCommand ?? (checkImageCommand = new Command(async () => await ExecuteCheckImageAsync()));
+        ICommand checkImageCommand;
+        public ICommand CheckImageCommand =>
+            checkImageCommand ?? (checkImageCommand = new Command(async () => await ExecuteCheckImageAsync()));
 
-		async Task ExecuteCheckImageAsync()
-		{
-			if (IsBusy)
-				return;
+        async Task ExecuteCheckImageAsync()
+        {
+            if (IsBusy)
+                return;
 
             try
             {
@@ -64,33 +67,33 @@ namespace NotHotdog.ViewModels
                 Scanned = false;
                 await CrossMedia.Current.Initialize();
 
-				if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
-				{
-                    if(!CrossMedia.Current.IsPickPhotoSupported)
+                if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+                {
+                    if (!CrossMedia.Current.IsPickPhotoSupported)
                     {
-                        
+
                     }
-					return;
-				}
+                    return;
+                }
 
                 IsBusy = true;
-				var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
-                {   
-                    CustomPhotoSize=50,
-					Directory = "Sample",
-					Name = "test.jpg"
-				});
+                var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+                {
+                    CustomPhotoSize = 50,
+                    Directory = "Sample",
+                    Name = "test.jpg"
+                });
 
 
 
-				if (file == null)
-					return;
-                           
+                if (file == null)
+                    return;
+
                 Picture = ImageSource.FromStream(() =>
                 {
-                	var stream = file.GetStream();
-                	file.Dispose();
-                	return stream;
+                    var stream = file.GetStream();
+                    file.Dispose();
+                    return stream;
                 });
 
 
@@ -99,25 +102,25 @@ namespace NotHotdog.ViewModels
                     BinaryReader binaryReader = new BinaryReader(stream);
                     var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
 
-					HttpClient client = new HttpClient();
+                    HttpClient client = new HttpClient();
                     client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", Constants.ApiKeys.COMPUTERVISION_APIKEY);
 
-					string uri = "https://westeurope.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Categories,Tags,Description&language=en";
+                    string uri = "https://westeurope.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Categories,Tags,Description&language=en";
 
-					HttpResponseMessage response;
+                    HttpResponseMessage response;
 
                     using (ByteArrayContent content = new ByteArrayContent(imagesBytes))
-					{
-						content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                    {
+                        content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
-						response = await client.PostAsync(uri, content);
-						string contentString = await response.Content.ReadAsStringAsync();
+                        response = await client.PostAsync(uri, content);
+                        string contentString = await response.Content.ReadAsStringAsync();
                         Debug.WriteLine(contentString);
 
                         CognitiveResults apiresult = JsonConvert.DeserializeObject<CognitiveResults>(contentString);
 
                         RecognizedHotdog recognizedHotdog = new RecognizedHotdog();
-                        if(apiresult.description.tags.Any(t => t == "hotdog") || (apiresult.description.tags.Any(t => t == "hot") && apiresult.description.tags.Any(t => t == "dog")))
+                        if (apiresult.description.tags.Any(t => t == "hotdog") || (apiresult.description.tags.Any(t => t == "hot") && apiresult.description.tags.Any(t => t == "dog")))
                         {
                             recognizedHotdog.Hotdog = true;
                         }
@@ -130,19 +133,62 @@ namespace NotHotdog.ViewModels
 
                         Hotdog = recognizedHotdog;
                         Scanned = true;
-    				}
+                    }
                 }
 
-			}
-			catch (Exception ex)
-			{
+            }
+            catch (Exception ex)
+            {
                 Error = true;
 
-			}
-			finally
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+		ICommand shareCommand;
+		public ICommand ShareCommand =>
+			shareCommand ?? (shareCommand = new Command(async () => await ExecuteShareAsync()));
+
+		async Task ExecuteShareAsync()
+		{
+			if (!CrossShare.IsSupported)
+				return;
+
+			await CrossShare.Current.Share(new ShareMessage
 			{
-				IsBusy = false;
-			}
+				Title = "CFood App!",
+                Text = "I'm using the CFood app to see what food i'm eating! You have to try it!",
+				Url = "https://mobilefirstcloudfirst.net/cfood-app/"
+			});
+
+			
 		}
+
+		ICommand githubCommand;
+		public ICommand GithubCommand =>
+			githubCommand ?? (githubCommand = new Command(async () => await ExecuteGithubAsync()));
+
+		async Task ExecuteGithubAsync()
+		{
+			if (!CrossShare.IsSupported)
+				return;
+
+			await CrossShare.Current.OpenBrowser("https://github.com/Geertvdc/Xamarin-NotHotdog");
+		}
+
+		ICommand pickImageCommand;
+		public ICommand PickImageCommand =>
+			pickImageCommand ?? (pickImageCommand = new Command(async () => await ExecutePickImageAsync()));
+
+		async Task ExecutePickImageAsync()
+		{
+		}
+
+
+
+#endregion
     }
 }

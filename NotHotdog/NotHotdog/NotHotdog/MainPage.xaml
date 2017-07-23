@@ -36,11 +36,14 @@
             <Label Text="Error processing image. try again" TextColor="White" HorizontalTextAlignment="Center"/>
         </StackLayout>
         
-        <StackLayout Grid.Row="3">
+        <StackLayout Grid.Row="3" VerticalOptions="Center">
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                <Button x:Name="shareButton" Text="Pick Photo" Command="{Binding CheckImageCommand}"  Style="{StaticResource ButtonStyle}"/>
-                <Button x:Name="photoButton" HorizontalOptions="Start" Command="{Binding CheckImageCommand}" Style="{StaticResource ButtonStyle}" BorderRadius="40" HeightRequest="80" BorderColor="White" WidthRequest="80"/>
-                <Button x:Name="codeButton" Text="Pick Photo" Command="{Binding CheckImageCommand}" Style="{StaticResource ButtonStyle}"/>
+                <Button x:Name="shareButton" Text="Pick Photo" Command="{Binding ShareCommand}"  Style="{StaticResource ButtonStyle}"/>
+                <Button x:Name="photoButton" HorizontalOptions="Start" Command="{Binding CheckImageCommand}" Style="{StaticResource ButtonStyle}" FontSize="34" BorderRadius="40" HeightRequest="80" BorderColor="White" WidthRequest="80"/>
+                <Button x:Name="codeButton" Text="Pick Photo" Command="{Binding GithubCommand}" FontSize="25" Style="{StaticResource ButtonStyle}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <Button x:Name="imageButton" Text="Select Image" Command="{Binding ImageCommand}" Style="{StaticResource ButtonStyle}"/>
             </StackLayout>
         </StackLayout>
 

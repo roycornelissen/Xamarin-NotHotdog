@@ -13,7 +13,7 @@
             
             <Style x:Key="ButtonStyle" TargetType="Button">
                 <Setter Property="TextColor" Value="#25C38E"/>
-                <Setter Property="FontSize" Value="30"/>
+                <Setter Property="FontSize" Value="18"/>
                 <Setter Property="HorizontalOptions" Value="Start"/>
                 <Setter Property="VerticalOptions" Value="Center"/>
                 <Setter Property="BorderRadius" Value="20"/>
