@@ -40,10 +40,17 @@
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                 <Button x:Name="shareButton" Text="Pick Photo" Command="{Binding ShareCommand}"  Style="{StaticResource ButtonStyle}"/>
                 <Button x:Name="photoButton" HorizontalOptions="Start" Command="{Binding CheckImageCommand}" Style="{StaticResource ButtonStyle}" FontSize="34" BorderRadius="40" HeightRequest="80" BorderColor="White" WidthRequest="80"/>
-                <Button x:Name="codeButton" Text="Pick Photo" Command="{Binding GithubCommand}" FontSize="25" Style="{StaticResource ButtonStyle}"/>
+                <Button x:Name="codeButton" Text="Pick Photo" Command="{Binding GithubCommand}" Style="{StaticResource ButtonStyle}">
+                    <Button.FontSize>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <OnPlatform.iOS>25</OnPlatform.iOS>
+                            <OnPlatform.Android>20</OnPlatform.Android>
+                        </OnPlatform>
+                    </Button.FontSize>
+                </Button>
             </StackLayout>
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                <Button x:Name="imageButton" Text="Select Image" Command="{Binding ImageCommand}" Style="{StaticResource ButtonStyle}"/>
+                <Button x:Name="imageButton" Text="Select Image" Command="{Binding PickImageCommand}" Style="{StaticResource ButtonStyle}"/>
             </StackLayout>
         </StackLayout>
 

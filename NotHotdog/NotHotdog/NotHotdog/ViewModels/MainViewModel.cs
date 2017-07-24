@@ -101,39 +101,7 @@ namespace NotHotdog.ViewModels
                 {
                     BinaryReader binaryReader = new BinaryReader(stream);
                     var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
-
-                    HttpClient client = new HttpClient();
-                    client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", Constants.ApiKeys.COMPUTERVISION_APIKEY);
-
-                    string uri = "https://westeurope.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Categories,Tags,Description&language=en";
-
-                    HttpResponseMessage response;
-
-                    using (ByteArrayContent content = new ByteArrayContent(imagesBytes))
-                    {
-                        content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-                        response = await client.PostAsync(uri, content);
-                        string contentString = await response.Content.ReadAsStringAsync();
-                        Debug.WriteLine(contentString);
-
-                        CognitiveResults apiresult = JsonConvert.DeserializeObject<CognitiveResults>(contentString);
-
-                        RecognizedHotdog recognizedHotdog = new RecognizedHotdog();
-                        if (apiresult.description.tags.Any(t => t == "hotdog") || (apiresult.description.tags.Any(t => t == "hot") && apiresult.description.tags.Any(t => t == "dog")))
-                        {
-                            recognizedHotdog.Hotdog = true;
-                        }
-                        if (apiresult.description.captions.Any())
-                        {
-                            recognizedHotdog.Description = apiresult.description.captions.FirstOrDefault().text;
-                            recognizedHotdog.Certainty = apiresult.description.captions.FirstOrDefault().confidence;
-                        }
-                        recognizedHotdog.Tags = apiresult.tags.Select(t => t.name).ToList();
-
-                        Hotdog = recognizedHotdog;
-                        Scanned = true;
-                    }
+                    await CheckImageForDescription(imagesBytes);
                 }
 
             }
@@ -148,7 +116,43 @@ namespace NotHotdog.ViewModels
             }
         }
 
-		ICommand shareCommand;
+        private async Task CheckImageForDescription(byte[] imagesBytes)
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", Constants.ApiKeys.COMPUTERVISION_APIKEY);
+
+            string uri = "https://westeurope.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Categories,Tags,Description&language=en";
+
+            HttpResponseMessage response;
+
+            using (ByteArrayContent content = new ByteArrayContent(imagesBytes))
+            {
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+
+                response = await client.PostAsync(uri, content);
+                string contentString = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(contentString);
+
+                CognitiveResults apiresult = JsonConvert.DeserializeObject<CognitiveResults>(contentString);
+
+                RecognizedHotdog recognizedHotdog = new RecognizedHotdog();
+                if (apiresult.description.tags.Any(t => t == "hotdog") || (apiresult.description.tags.Any(t => t == "hot") && apiresult.description.tags.Any(t => t == "dog")))
+                {
+                    recognizedHotdog.Hotdog = true;
+                }
+                if (apiresult.description.captions.Any())
+                {
+                    recognizedHotdog.Description = apiresult.description.captions.FirstOrDefault().text;
+                    recognizedHotdog.Certainty = apiresult.description.captions.FirstOrDefault().confidence;
+                }
+                recognizedHotdog.Tags = apiresult.tags.Select(t => t.name).ToList();
+
+                Hotdog = recognizedHotdog;
+                Scanned = true;
+            }
+        }
+
+        ICommand shareCommand;
 		public ICommand ShareCommand =>
 			shareCommand ?? (shareCommand = new Command(async () => await ExecuteShareAsync()));
 
@@ -185,6 +189,31 @@ namespace NotHotdog.ViewModels
 
 		async Task ExecutePickImageAsync()
 		{
+            if (CrossMedia.Current.IsPickPhotoSupported)
+            {
+                var photo = await CrossMedia.Current.PickPhotoAsync();
+
+                if(photo == null)
+                {
+                    return;
+                }
+
+				Picture = ImageSource.FromStream(() =>
+				{
+					var stream = photo.GetStream();
+                    photo.Dispose();
+					return stream;
+				});
+
+                using (var stream = photo.GetStream())
+				{
+					BinaryReader binaryReader = new BinaryReader(stream);
+					var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
+
+					await CheckImageForDescription(imagesBytes);
+				}
+
+            }
 		}
 
 
