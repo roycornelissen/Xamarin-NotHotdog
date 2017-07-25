@@ -34,5 +34,16 @@
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.xpirit.cfood</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>CFBundleTypeName</string>
+		</dict>
+	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>CFood wants permission to access camera</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CFood wants permission to access gallery</string>
 </dict>
 </plist>

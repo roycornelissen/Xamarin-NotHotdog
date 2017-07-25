@@ -13,6 +13,7 @@ using Xamarin.Forms;
 using System.Linq;
 using Plugin.Share;
 using Plugin.Share.Abstractions;
+using Microsoft.Azure.Mobile.Analytics;
 
 namespace NotHotdog.ViewModels
 {
@@ -108,7 +109,7 @@ namespace NotHotdog.ViewModels
             catch (Exception ex)
             {
                 Error = true;
-
+                Analytics.TrackEvent("Exception while picking file from library");
             }
             finally
             {
@@ -139,9 +140,11 @@ namespace NotHotdog.ViewModels
                 if (apiresult.description.tags.Any(t => t == "hotdog") || (apiresult.description.tags.Any(t => t == "hot") && apiresult.description.tags.Any(t => t == "dog")))
                 {
                     recognizedHotdog.Hotdog = true;
+                    Analytics.TrackEvent("Hotdog Scanned");
                 }
                 if (apiresult.description.captions.Any())
                 {
+                    Analytics.TrackEvent("Not Hotdog Scanned");
                     recognizedHotdog.Description = apiresult.description.captions.FirstOrDefault().text;
                     recognizedHotdog.Certainty = apiresult.description.captions.FirstOrDefault().confidence;
                 }
@@ -177,6 +180,8 @@ namespace NotHotdog.ViewModels
 
 		async Task ExecuteGithubAsync()
 		{
+
+
 			if (!CrossShare.IsSupported)
 				return;
 
@@ -189,30 +194,48 @@ namespace NotHotdog.ViewModels
 
 		async Task ExecutePickImageAsync()
 		{
-            if (CrossMedia.Current.IsPickPhotoSupported)
-            {
-                var photo = await CrossMedia.Current.PickPhotoAsync();
+            Error = false;
+			if (IsBusy)
+				return;
 
-                if(photo == null)
+            try
+            {
+                if (CrossMedia.Current.IsPickPhotoSupported)
                 {
-                    return;
+                    IsBusy = true;
+                    var photo = await CrossMedia.Current.PickPhotoAsync();
+
+                    if (photo == null)
+                    {
+                        return;
+                    }
+
+                    Picture = ImageSource.FromStream(() =>
+                    {
+                        var stream = photo.GetStream();
+                        photo.Dispose();
+                        return stream;
+                    });
+
+                    using (var stream = photo.GetStream())
+                    {
+                        BinaryReader binaryReader = new BinaryReader(stream);
+                        var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
+
+                        await CheckImageForDescription(imagesBytes);
+                    }
+
                 }
 
-				Picture = ImageSource.FromStream(() =>
-				{
-					var stream = photo.GetStream();
-                    photo.Dispose();
-					return stream;
-				});
-
-                using (var stream = photo.GetStream())
-				{
-					BinaryReader binaryReader = new BinaryReader(stream);
-					var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
-
-					await CheckImageForDescription(imagesBytes);
-				}
-
+            }
+            catch (Exception ex)
+            {
+                Error = true;
+                Analytics.TrackEvent("Exception while picking file from library");
+            }
+            finally
+            {
+                IsBusy = false;
             }
 		}
 

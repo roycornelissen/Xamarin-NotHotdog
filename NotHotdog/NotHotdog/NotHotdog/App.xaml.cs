@@ -22,7 +22,7 @@ namespace NotHotdog
         protected override void OnStart()
         {
             MobileCenter.Start("android=" + ApiKeys.MOBILECENTER_DROID_KEY + ";" +
-                               "ios=" + ApiKeys.MOBILECENTER_IOS_KEY,
+                               "ios=" + ApiKeys.MOBILECENTER_IOS_KEY + ";",
 				   typeof(Analytics), typeof(Crashes));
         }
 
