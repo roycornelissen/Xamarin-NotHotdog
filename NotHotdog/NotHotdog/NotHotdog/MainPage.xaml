@@ -13,7 +13,7 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1.8*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="2*"/>
@@ -21,12 +21,16 @@
         <Image Source="bgimage.jpg" Grid.Row="0" Grid.RowSpan="4" Aspect="AspectFill"/>
         <Image Source="{Binding Picture}" Grid.Row="0" Grid.RowSpan="4" Aspect="AspectFill"/>
         <Grid Grid.Row="0" IsVisible="{Binding Scanned}">
-            <StackLayout BackgroundColor="#25C38E" IsVisible="{Binding Hotdog.Hotdog}">
-                <Label HorizontalTextAlignment="Center" FontSize="50" TextColor="#BB1010" Margin="20">Hotdog!</Label>
+
+            <StackLayout BackgroundColor="#25C38E" Padding="10" IsVisible="{Binding Hotdog.Hotdog}">
+                <Label HorizontalTextAlignment="Center" FontSize="50" TextColor="#BB1010" Margin="30">Hotdog!</Label>
+                <Label Text="I'm pretty sure" TextColor="White" HorizontalTextAlignment="Center"/>
+                <Label Text="you are eating a Hotdog!" TextColor="White" HorizontalTextAlignment="Center"/>
             </StackLayout>
 
-            <StackLayout BackgroundColor="#BB1010" VerticalOptions="FillAndExpand" IsVisible="{Binding Hotdog.Hotdog, Converter={StaticResource invertBooleanConverter}}" Padding="10">
-                <Label HorizontalTextAlignment="Center" FontSize="50" TextColor="#25C38E" Margin="20">Not Hotdog!</Label>
+
+            <StackLayout BackgroundColor="#BB1010" VerticalOptions="FillAndExpand"  Padding="10" IsVisible="{Binding Hotdog.Hotdog, Converter={StaticResource invertBooleanConverter}}">
+                <Label HorizontalTextAlignment="Center" FontSize="50" TextColor="#25C38E" Margin="20">Not a Hotdog!</Label>
                 <Label Text="my guess it's" TextColor="White" HorizontalTextAlignment="Center"/>
                 <Label Text="{Binding Hotdog.Description}" TextColor="White" HorizontalTextAlignment="Center"/>
             </StackLayout>
