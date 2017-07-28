@@ -31,6 +31,8 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>fontawesome-webfont.ttf</string>
+		<string>Dosis-Bold.ttf</string>
+		<string>Dosis-Light.ttf</string>
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.xpirit.cfood</string>

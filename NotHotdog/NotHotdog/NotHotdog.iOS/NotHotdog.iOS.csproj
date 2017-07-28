@@ -127,6 +127,9 @@
     <BundleResource Include="Resources\fontawesome-webfont.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </BundleResource>
+    <BundleResource Include="Resources\Dosis-Bold.ttf" />
+    <BundleResource Include="Resources\Dosis-Light.ttf" />
+    <BundleResource Include="Resources\icon.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
