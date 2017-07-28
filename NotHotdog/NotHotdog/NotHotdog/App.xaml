@@ -10,6 +10,16 @@
                 <OnPlatform.iOS>FontAwesome</OnPlatform.iOS>
                 <OnPlatform.Android>fontawesome-webfont.ttf#FontAwesome-Regular</OnPlatform.Android>
             </OnPlatform>
+
+            <OnPlatform x:TypeArguments="x:String" x:Key="DosisLightFont">
+                <OnPlatform.iOS>Dosis-Light</OnPlatform.iOS>
+                <OnPlatform.Android>Dosis-Light.ttf#Dosis-Light</OnPlatform.Android>
+            </OnPlatform>
+
+            <OnPlatform x:TypeArguments="x:String" x:Key="DosisBoldFont">
+                <OnPlatform.iOS>Dosis-Bold</OnPlatform.iOS>
+                <OnPlatform.Android>Dosis-Bold.ttf#Dosis-Bold</OnPlatform.Android>
+            </OnPlatform>
             
             <Style x:Key="ButtonStyle" TargetType="Button">
                 <Setter Property="TextColor" Value="#25C38E"/>

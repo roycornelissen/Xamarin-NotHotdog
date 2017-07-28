@@ -20,34 +20,53 @@
         </Grid.RowDefinitions>
         <Image Source="bgimage.jpg" Grid.Row="0" Grid.RowSpan="4" Aspect="AspectFill"/>
         <Image Source="{Binding Picture}" Grid.Row="0" Grid.RowSpan="4" Aspect="AspectFill"/>
-        <Grid Grid.Row="0" IsVisible="{Binding Scanned}">
+        <Grid Grid.Row="0" IsVisible="{Binding Scanned}"><!-- IsVisible="{Binding Scanned}" -->
 
-            <StackLayout BackgroundColor="#25C38E" Padding="10" IsVisible="{Binding Hotdog.Hotdog}">
-                <Label HorizontalTextAlignment="Center" FontSize="50" TextColor="#BB1010" Margin="30">Hotdog!</Label>
-                <Label Text="I'm pretty sure" TextColor="White" HorizontalTextAlignment="Center"/>
-                <Label Text="you are eating a Hotdog!" TextColor="White" HorizontalTextAlignment="Center"/>
+            <StackLayout Padding="30" IsVisible="{Binding Hotdog.Hotdog}"> <!-- IsVisible="{Binding Hotdog.Hotdog}" -->
+                <Frame CornerRadius="20"  
+                   OutlineColor="#25C38E" BackgroundColor="#25C38E"
+                   Padding="20">
+                <StackLayout Margin="0,0,0,50">
+                    <Label HorizontalTextAlignment="Center" FontSize="50" TextColor="#BB1010" Margin="0" FontFamily="{StaticResource DosisBoldFont}">HOTDOG!</Label>
+                    <Label Text="I'm pretty sure" TextColor="White" HorizontalTextAlignment="Center" FontFamily="{StaticResource DosisBoldFont}"/>
+                    <Label Text="you are eating a Hotdog!" TextColor="White" HorizontalTextAlignment="Center" FontFamily="{StaticResource DosisBoldFont}"/>
+                </StackLayout>
+                </Frame>
+                <Image Source="icon.png" WidthRequest="100" HeightRequest="100" Margin="0,-55,0,0"/>
             </StackLayout>
 
-
-            <StackLayout BackgroundColor="#BB1010" VerticalOptions="FillAndExpand"  Padding="10" IsVisible="{Binding Hotdog.Hotdog, Converter={StaticResource invertBooleanConverter}}">
-                <Label HorizontalTextAlignment="Center" FontSize="50" TextColor="#25C38E" Margin="20">Not a Hotdog!</Label>
-                <Label Text="my guess it's" TextColor="White" HorizontalTextAlignment="Center"/>
-                <Label Text="{Binding Hotdog.Description}" TextColor="White" HorizontalTextAlignment="Center"/>
+            <StackLayout Padding="30" IsVisible="{Binding Hotdog.Hotdog, Converter={StaticResource invertBooleanConverter}}">
+                <Frame CornerRadius="20"  
+                   OutlineColor="#BB1010" BackgroundColor="#BB1010"
+                   Padding="20">
+                    <StackLayout Margin="0,0,0,50">
+                        <Label HorizontalTextAlignment="Center" FontSize="40" TextColor="#25C38E" FontFamily="{StaticResource DosisBoldFont}">NOT A HOTDOG!</Label>
+                        <Label Text="my guess it's" TextColor="White" HorizontalTextAlignment="Center" FontFamily="{StaticResource DosisBoldFont}"/>
+                        <Label Text="{Binding Hotdog.Description}" TextColor="White" HorizontalTextAlignment="Center" FontFamily="{StaticResource DosisBoldFont}"/>
+                    </StackLayout>
+                </Frame>
+                <Image Source="icon.png" WidthRequest="100" HeightRequest="100" Margin="0,-55,0,0"/>
             </StackLayout>
         </Grid>
 
-        <StackLayout Grid.Row="0" BackgroundColor="Black" IsVisible="{Binding Error}">
-            <Label Text="Error processing image. try again" TextColor="White" HorizontalTextAlignment="Center"/>
+        <StackLayout Grid.Row="0" Padding="30" IsVisible="{Binding Error}"> <!-- IsVisible="{Binding Error}" -->
+            <Frame CornerRadius="20"  
+               OutlineColor="Black" BackgroundColor="Black"
+               Padding="20">
+                <StackLayout >
+                    <Label Text="Error processing your image. Please try again" TextColor="White" HorizontalTextAlignment="Center"/>
+                </StackLayout>
+            </Frame>
         </StackLayout>
 
         <StackLayout Grid.Row="2" Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="End" IsVisible="{Binding Scanned , Converter={StaticResource invertBooleanConverter}}">
             <Frame CornerRadius="20"  
                    OutlineColor="#BB1010" BackgroundColor="#BB1010"
                    Padding="20">
-            <StackLayout>
-                <Label Text="Take picture of your food to start" TextColor="White" HorizontalTextAlignment="Center"/>
-            </StackLayout>
-</Frame>
+                <StackLayout>
+                    <Label Text="Take picture of your food to start" TextColor="White" HorizontalTextAlignment="Center" FontFamily="{StaticResource DosisLightFont}"/>
+                </StackLayout>
+            </Frame>
         </StackLayout>
         
         <StackLayout Grid.Row="3" VerticalOptions="Center">
