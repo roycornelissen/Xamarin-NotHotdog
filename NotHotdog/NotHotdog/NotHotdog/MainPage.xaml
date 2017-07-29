@@ -26,26 +26,26 @@
                 <Frame CornerRadius="20"  
                    OutlineColor="#25C38E" BackgroundColor="#25C38E"
                    Padding="20">
-                <StackLayout Margin="0,0,0,50">
+                <StackLayout Margin="0,0,0,0">
                     <Label HorizontalTextAlignment="Center" FontSize="50" TextColor="#BB1010" Margin="0" FontFamily="{StaticResource DosisBoldFont}">HOTDOG!</Label>
                     <Label Text="I'm pretty sure" TextColor="White" HorizontalTextAlignment="Center" FontFamily="{StaticResource DosisBoldFont}"/>
                     <Label Text="you are eating a Hotdog!" TextColor="White" HorizontalTextAlignment="Center" FontFamily="{StaticResource DosisBoldFont}"/>
                 </StackLayout>
                 </Frame>
-                <Image Source="icon.png" WidthRequest="100" HeightRequest="100" Margin="0,-55,0,0"/>
+                <!--<Image Source="icon.png" WidthRequest="100" HeightRequest="100" Margin="0,-55,0,0"/>-->
             </StackLayout>
 
             <StackLayout Padding="30" IsVisible="{Binding Hotdog.Hotdog, Converter={StaticResource invertBooleanConverter}}">
                 <Frame CornerRadius="20"  
                    OutlineColor="#BB1010" BackgroundColor="#BB1010"
                    Padding="20">
-                    <StackLayout Margin="0,0,0,50">
+                    <StackLayout Margin="0,0,0,0">
                         <Label HorizontalTextAlignment="Center" FontSize="40" TextColor="#25C38E" FontFamily="{StaticResource DosisBoldFont}">NOT A HOTDOG!</Label>
                         <Label Text="my guess it's" TextColor="White" HorizontalTextAlignment="Center" FontFamily="{StaticResource DosisBoldFont}"/>
                         <Label Text="{Binding Hotdog.Description}" TextColor="White" HorizontalTextAlignment="Center" FontFamily="{StaticResource DosisBoldFont}"/>
                     </StackLayout>
                 </Frame>
-                <Image Source="icon.png" WidthRequest="100" HeightRequest="100" Margin="0,-55,0,0"/>
+                <!--<Image Source="icon.png" WidthRequest="100" HeightRequest="100" Margin="0,-55,0,0"/>-->
             </StackLayout>
         </Grid>
 
@@ -77,7 +77,7 @@
                     <Button.FontSize>
                         <OnPlatform x:TypeArguments="x:Double">
                             <OnPlatform.iOS>25</OnPlatform.iOS>
-                            <OnPlatform.Android>20</OnPlatform.Android>
+                            <OnPlatform.Android>18</OnPlatform.Android>
                         </OnPlatform>
                     </Button.FontSize>
                 </Button>
