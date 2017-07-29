@@ -14,6 +14,7 @@ using System.Linq;
 using Plugin.Share;
 using Plugin.Share.Abstractions;
 using Microsoft.Azure.Mobile.Analytics;
+using System.Collections.Generic;
 
 namespace NotHotdog.ViewModels
 {
@@ -108,8 +109,11 @@ namespace NotHotdog.ViewModels
             }
             catch (Exception ex)
             {
-                Error = true;
-                Analytics.TrackEvent("Exception while picking file from library");
+                Error = true;  
+				Analytics.TrackEvent("Exception while checking image from Camera", new Dictionary<string, string> {
+                    { "Exception", ex.Message },
+                    { "Exception Type", ex.GetType().ToString() },
+                    { "StackTrace", ex.StackTrace}});
             }
             finally
             {
@@ -231,7 +235,10 @@ namespace NotHotdog.ViewModels
             catch (Exception ex)
             {
                 Error = true;
-                Analytics.TrackEvent("Exception while picking file from library");
+				Analytics.TrackEvent("Exception while picking file from library", new Dictionary<string, string> {
+					{ "Exception", ex.Message },
+					{ "Exception Type", ex.GetType().ToString() },
+					{ "StackTrace", ex.StackTrace}});
             }
             finally
             {
