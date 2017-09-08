@@ -169,6 +169,8 @@ namespace NotHotdog.ViewModels
 			if (!CrossShare.IsSupported)
 				return;
 
+            Analytics.TrackEvent("Share button");
+
 			await CrossShare.Current.Share(new ShareMessage
 			{
 				Title = "CFood App!",
@@ -185,11 +187,10 @@ namespace NotHotdog.ViewModels
 
 		async Task ExecuteGithubAsync()
 		{
-
-
 			if (!CrossShare.IsSupported)
 				return;
 
+            Analytics.TrackEvent("open github event");
 			await CrossShare.Current.OpenBrowser("https://github.com/Geertvdc/Xamarin-NotHotdog");
 		}
 
