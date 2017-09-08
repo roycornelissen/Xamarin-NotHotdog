@@ -15,6 +15,7 @@ using Plugin.Share;
 using Plugin.Share.Abstractions;
 using Microsoft.Azure.Mobile.Analytics;
 using System.Collections.Generic;
+using Plugin.Media.Abstractions;
 
 namespace NotHotdog.ViewModels
 {
@@ -202,8 +203,8 @@ namespace NotHotdog.ViewModels
 			if (IsBusy)
 				return;
 
-            try
-            {
+            //try
+            //{
                 if (CrossMedia.Current.IsPickPhotoSupported)
                 {
                     IsBusy = true;
@@ -231,19 +232,19 @@ namespace NotHotdog.ViewModels
 
                 }
 
-            }
-            catch (Exception ex)
-            {
-                Error = true;
-				Analytics.TrackEvent("Exception while picking file from library", new Dictionary<string, string> {
-					{ "Exception", ex.Message },
-					{ "Exception Type", ex.GetType().ToString() },
-					{ "StackTrace", ex.StackTrace}});
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            Error = true;
+				//Analytics.TrackEvent("Exception while picking file from library", new Dictionary<string, string> {
+					//{ "Exception", ex.Message },
+					//{ "Exception Type", ex.GetType().ToString() },
+					//{ "StackTrace", ex.StackTrace}});
+            //}
+            //finally
+            //{
+            //    IsBusy = false;
+            //}
 		}
 
 
