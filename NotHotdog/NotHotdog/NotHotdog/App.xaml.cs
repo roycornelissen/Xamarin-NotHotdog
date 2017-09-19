@@ -16,7 +16,7 @@ namespace NotHotdog
         {
             InitializeComponent();
 
-            MainPage = new NotHotdog.MainPage();
+            MainPage = new NavigationPage(new NotHotdog.MainPage());
         }
 
         protected override void OnStart()

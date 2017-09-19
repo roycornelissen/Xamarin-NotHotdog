@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="NotHotdog.Views.InfoPage">
+    <ScrollView>
+        <StackLayout Padding="30">
+
+            <Label Text="CFood Information" FontSize="25" FontAttributes="Bold" />
+            <Label Text="CFood is an app made as a sample app to showcase Microsoft Azure Cognitive Services." FontSize="16"/>
+            <Label Text="This app is completely open source and all code can be found on github." FontSize="16"/>
+
+            <Button Text="View code on Github" BackgroundColor="#25C38E" TextColor="White" Margin="0,15,0,0" Command="{Binding GithubCommand}"/>
+
+            <Label Text="Bonus Features" FontSize="25" FontAttributes="Bold" Margin="0,15,0,0"/>
+            <Label Text="This app can even more than just see if you are eating hot dogs. If you know what Xamarin monkeys are: this app can see what kind of shirt they are wearing. try it" FontSize="16"/>
+
+            <Button Text="Xamarin Monkey Shirt Test" BackgroundColor="#25C38E" TextColor="White" Margin="0,15,0,15"/>
+
+            <Label Text="Last but not least it also contains speaker recognition." FontSize="16"/>
+            <Button Text="Speaker recognition" BackgroundColor="#25C38E" TextColor="White" Margin="0,15,0,0"/>
+        
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

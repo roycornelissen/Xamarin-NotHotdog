@@ -15,13 +15,20 @@ using Plugin.Share;
 using Plugin.Share.Abstractions;
 using Microsoft.Azure.Mobile.Analytics;
 using System.Collections.Generic;
+using Plugin.Media.Abstractions;
+using NotHotdog.Services;
 
 namespace NotHotdog.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        public MainViewModel()
+        IHotDogRecognitionService _hotdogRecognitionService;
+        INavigation _navigation;
+
+        public MainViewModel(IHotDogRecognitionService hotdogRecognitionService, INavigation navigation)
         {
+            _hotdogRecognitionService = hotdogRecognitionService;
+            _navigation = navigation;
         }
 
         RecognizedHotdog hotdog = new RecognizedHotdog() { Hotdog = false };
@@ -81,7 +88,8 @@ namespace NotHotdog.ViewModels
                 IsBusy = true;
                 var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
                 {
-                    CustomPhotoSize = 50,
+                    PhotoSize = PhotoSize.Custom,
+                    CustomPhotoSize = 40,
                     Directory = "Sample",
                     Name = "test.jpg"
                 });
@@ -103,7 +111,9 @@ namespace NotHotdog.ViewModels
                 {
                     BinaryReader binaryReader = new BinaryReader(stream);
                     var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
-                    await CheckImageForDescription(imagesBytes);
+					
+                    Hotdog = await _hotdogRecognitionService.CheckImageForDescription(imagesBytes);
+					Scanned = true;
                 }
 
             }
@@ -121,44 +131,6 @@ namespace NotHotdog.ViewModels
             }
         }
 
-        private async Task CheckImageForDescription(byte[] imagesBytes)
-        {
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", Constants.ApiKeys.COMPUTERVISION_APIKEY);
-
-            string uri = "https://westeurope.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Categories,Tags,Description&language=en";
-
-            HttpResponseMessage response;
-
-            using (ByteArrayContent content = new ByteArrayContent(imagesBytes))
-            {
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-                response = await client.PostAsync(uri, content);
-                string contentString = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(contentString);
-
-                CognitiveResults apiresult = JsonConvert.DeserializeObject<CognitiveResults>(contentString);
-
-                RecognizedHotdog recognizedHotdog = new RecognizedHotdog();
-                if (apiresult.description.tags.Any(t => t == "hotdog") || (apiresult.description.tags.Any(t => t == "hot") && apiresult.description.tags.Any(t => t == "dog")))
-                {
-                    recognizedHotdog.Hotdog = true;
-                    Analytics.TrackEvent("Hotdog Scanned");
-                }
-                if (apiresult.description.captions.Any())
-                {
-                    Analytics.TrackEvent("Not Hotdog Scanned");
-                    recognizedHotdog.Description = apiresult.description.captions.FirstOrDefault().text;
-                    recognizedHotdog.Certainty = apiresult.description.captions.FirstOrDefault().confidence;
-                }
-                recognizedHotdog.Tags = apiresult.tags.Select(t => t.name).ToList();
-
-                Hotdog = recognizedHotdog;
-                Scanned = true;
-            }
-        }
-
         ICommand shareCommand;
 		public ICommand ShareCommand =>
 			shareCommand ?? (shareCommand = new Command(async () => await ExecuteShareAsync()));
@@ -167,6 +139,8 @@ namespace NotHotdog.ViewModels
 		{
 			if (!CrossShare.IsSupported)
 				return;
+
+            Analytics.TrackEvent("Share button");
 
 			await CrossShare.Current.Share(new ShareMessage
 			{
@@ -184,13 +158,24 @@ namespace NotHotdog.ViewModels
 
 		async Task ExecuteGithubAsync()
 		{
-
-
 			if (!CrossShare.IsSupported)
 				return;
 
+            Analytics.TrackEvent("open github event");
 			await CrossShare.Current.OpenBrowser("https://github.com/Geertvdc/Xamarin-NotHotdog");
 		}
+
+        ICommand infoCommand;
+        public ICommand InfoCommand =>
+			infoCommand ?? (infoCommand = new Command(async () => await ExecuteInfoAsync()));
+
+        async Task ExecuteInfoAsync()
+		{
+            await _navigation.PushAsync(new Views.InfoPage());
+		}
+
+
+
 
 		ICommand pickImageCommand;
 		public ICommand PickImageCommand =>
@@ -226,11 +211,11 @@ namespace NotHotdog.ViewModels
                         BinaryReader binaryReader = new BinaryReader(stream);
                         var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
 
-                        await CheckImageForDescription(imagesBytes);
+                        Hotdog = await _hotdogRecognitionService.CheckImageForDescription(imagesBytes);
+                        Scanned = true;
                     }
 
                 }
-
             }
             catch (Exception ex)
             {
