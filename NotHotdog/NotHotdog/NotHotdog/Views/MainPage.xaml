@@ -43,6 +43,11 @@
                         <Label HorizontalTextAlignment="Center" FontSize="40" TextColor="#25C38E" FontFamily="{StaticResource DosisBoldFont}">NOT A HOTDOG!</Label>
                         <Label Text="my guess it's" TextColor="White" HorizontalTextAlignment="Center" FontFamily="{StaticResource DosisBoldFont}"/>
                         <Label Text="{Binding Hotdog.Description}" TextColor="White" HorizontalTextAlignment="Center" FontFamily="{StaticResource DosisBoldFont}"/>
+                        <StackLayout HorizontalOptions="Center">
+                            <Label Text="Tag: " TextColor="White" FontFamily="{StaticResource DosisBoldFont}"/>
+                            <Label Text="{Binding Hotdog.Tags[0]}" TextColor="White" FontFamily="{StaticResource DosisBoldFont}"/>
+                        </StackLayout>
+
                     </StackLayout>
                 </Frame>
                 <!--<Image Source="icon.png" WidthRequest="100" HeightRequest="100" Margin="0,-55,0,0"/>-->
