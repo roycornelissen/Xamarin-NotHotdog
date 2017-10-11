@@ -17,6 +17,7 @@ using Microsoft.Azure.Mobile.Analytics;
 using System.Collections.Generic;
 using Plugin.Media.Abstractions;
 using NotHotdog.Services;
+using Microsoft.Azure.Mobile;
 
 namespace NotHotdog.ViewModels
 {
@@ -113,7 +114,35 @@ namespace NotHotdog.ViewModels
                     var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
 					
                     Hotdog = await _hotdogRecognitionService.CheckImageForDescription(imagesBytes);
-					Scanned = true;
+
+                    if (Hotdog.Hotdog)
+                    {
+                        Analytics.TrackEvent("Hotdog Scanned", new Dictionary<string, string> {
+                                { "Description", Hotdog.Description},
+                                { "Certainty", Hotdog.Certainty.ToString() }});
+                    }
+                    else
+                    {
+                        string tags = "";
+                        foreach (var Tag in Hotdog.Tags)
+                        {
+                            tags += Tag.ToString() + ", ";
+
+                        }
+                        Analytics.TrackEvent("Not Hotdog Scanned", new Dictionary<string, string> {
+                                { "Description", Hotdog.Description},
+                                { "Certainty", Hotdog.Certainty.ToString()},
+                                { "Tags", tags}});
+                    }
+
+                    if (Hotdog.Tags.Count > 0)
+                    {
+                        CustomProperties properties = new CustomProperties();
+                        properties.Set("tag", hotdog.Tags[0]);
+                        MobileCenter.SetCustomProperties(properties);
+                    }
+					
+                    Scanned = true;
                 }
 
             }
@@ -192,7 +221,7 @@ namespace NotHotdog.ViewModels
                 if (CrossMedia.Current.IsPickPhotoSupported)
                 {
                     IsBusy = true;
-                    var photo = await CrossMedia.Current.PickPhotoAsync();
+                    var photo = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions(){ PhotoSize = PhotoSize.Custom, CustomPhotoSize = 40});
 
                     if (photo == null)
                     {
@@ -212,6 +241,33 @@ namespace NotHotdog.ViewModels
                         var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
 
                         Hotdog = await _hotdogRecognitionService.CheckImageForDescription(imagesBytes);
+                        if(Hotdog.Hotdog)
+                        {
+                            Analytics.TrackEvent("Hotdog Scanned", new Dictionary<string, string> {
+                                { "Description", Hotdog.Description},
+                                { "Certainty", Hotdog.Certainty.ToString() }});
+                        }
+                        else
+                        {
+                            string tags = "";
+                            foreach(var Tag in Hotdog.Tags)
+                            {
+                                tags += Tag.ToString() + ", ";
+                                
+                            }
+                            Analytics.TrackEvent("Not Hotdog Scanned", new Dictionary<string, string> {
+                                { "Description", Hotdog.Description},
+                                { "Certainty", Hotdog.Certainty.ToString()},
+                                { "Tags", tags}});
+                        }
+
+						if (Hotdog.Tags.Count > 0)
+						{
+							CustomProperties properties = new CustomProperties();
+							properties.Set("tag", hotdog.Tags[0]);
+							MobileCenter.SetCustomProperties(properties);
+						}
+
                         Scanned = true;
                     }
 

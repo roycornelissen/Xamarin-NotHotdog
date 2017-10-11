@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "878069566909",
+    "firebase_url": "https://cfoodapp.firebaseio.com",
+    "project_id": "cfoodapp",
+    "storage_bucket": "cfoodapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878069566909:android:8592ff10b3c969bf",
+        "android_client_info": {
+          "package_name": "com.xpirit.cfoodapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878069566909-doeu55n7if5ghtmtokqfa93n9jkid7hk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnQRJorbIe8q5zO4BhEbOZIez3ht1-whY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
