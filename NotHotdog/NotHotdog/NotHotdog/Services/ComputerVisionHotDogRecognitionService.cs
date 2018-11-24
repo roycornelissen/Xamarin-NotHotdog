@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -8,9 +7,9 @@ using NotHotdog.Model;
 
 namespace NotHotdog.Services
 {
-    public class HotDogRecognitionService : IHotDogRecognitionService
+	public class ComputerVisionHotDogRecognitionService : IHotDogRecognitionService
     {
-        public HotDogRecognitionService()
+        public ComputerVisionHotDogRecognitionService()
         {
         }
 

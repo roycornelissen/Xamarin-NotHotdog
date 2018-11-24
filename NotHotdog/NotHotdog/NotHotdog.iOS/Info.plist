@@ -19,7 +19,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>MinimumOSVersion</key>
-	<string>8.0</string>
+	<string>11.0</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>XSAppIconAssets</key>
@@ -47,5 +47,9 @@
 	<string>CFood wants permission to access camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>CFood wants permission to access gallery</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

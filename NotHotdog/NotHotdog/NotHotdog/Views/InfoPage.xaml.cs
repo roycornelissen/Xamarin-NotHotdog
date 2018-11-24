@@ -12,7 +12,7 @@ namespace NotHotdog.Views
         {
             InitializeComponent();
 
-            InfoViewModel vm = new InfoViewModel(new HotDogRecognitionService(), Navigation);
+			InfoViewModel vm = new InfoViewModel(DependencyService.Get<IHotDogRecognitionService>(), Navigation);
             BindingContext = vm;
         }
     }

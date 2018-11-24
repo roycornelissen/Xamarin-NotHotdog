@@ -8,6 +8,8 @@ using Android.Widget;
 using Android.OS;
 using Plugin.Permissions;
 using Microsoft.Azure.Mobile.Push;
+using Xamarin.Forms;
+using NotHotdog.Services;
 
 namespace NotHotdog.Droid
 {
@@ -24,7 +26,11 @@ namespace NotHotdog.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
-            LoadApplication(new App());
+
+			DependencyService.Register<ComputerVisionHotDogRecognitionService>();
+//			DependencyService.Register<CustomVisionHotDogRecognitionService>();
+
+			LoadApplication(new App());
         }
 
 		public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)

@@ -87,15 +87,12 @@ namespace NotHotdog.ViewModels
                 }
 
                 IsBusy = true;
-                var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
-                {
-                    PhotoSize = PhotoSize.Custom,
-                    CustomPhotoSize = 40,
+                var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+				{
+					PhotoSize = PhotoSize.Small,
                     Directory = "Sample",
                     Name = "test.jpg"
                 });
-
-
 
                 if (file == null)
                     return;
@@ -107,13 +104,11 @@ namespace NotHotdog.ViewModels
                     return stream;
                 });
 
-
                 using (var stream = file.GetStream())
-                {
-                    BinaryReader binaryReader = new BinaryReader(stream);
-                    var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
-					
-                    Hotdog = await _hotdogRecognitionService.CheckImageForDescription(imagesBytes);
+				using (var binaryReader = new BinaryReader(stream))
+				{
+					var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
+					Hotdog = await _hotdogRecognitionService.CheckImageForDescription(imagesBytes);
 
                     if (Hotdog.Hotdog)
                     {
@@ -221,7 +216,7 @@ namespace NotHotdog.ViewModels
                 if (CrossMedia.Current.IsPickPhotoSupported)
                 {
                     IsBusy = true;
-                    var photo = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions(){ PhotoSize = PhotoSize.Custom, CustomPhotoSize = 40});
+					var photo = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions(){ PhotoSize = PhotoSize.Small });
 
                     if (photo == null)
                     {

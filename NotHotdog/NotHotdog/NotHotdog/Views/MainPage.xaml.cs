@@ -15,7 +15,7 @@ namespace NotHotdog
         {
             InitializeComponent();
 
-            MainViewModel vm = new MainViewModel(new HotDogRecognitionService(),Navigation);
+            MainViewModel vm = new MainViewModel(DependencyService.Get<IHotDogRecognitionService>(), Navigation);
             BindingContext = vm;
 
             photoButton.Text = "\uf030";
