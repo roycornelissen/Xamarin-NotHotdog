@@ -27,9 +27,10 @@ namespace NotHotdog.iOS
         {
             global::Xamarin.Forms.Forms.Init();
 
-//			DependencyService.Register<ComputerVisionHotDogRecognitionService>();
+			//DependencyService.Register<ComputerVisionHotDogRecognitionService>();
 			//DependencyService.Register<CustomVisionHotDogRecognitionService>();
-			DependencyService.Register<iOSHotDogRecognitionService>();
+			//DependencyService.Register<iOSHotDogRecognitionService>();
+			DependencyService.Register<SqueezeNetHotDogRecognitionService>();
 
 			LoadApplication(new App());
 

@@ -105,6 +105,10 @@
       <DependentUpon>NotHotDog.mlmodel</DependentUpon>
     </Compile>
     <Compile Include="Services\UIImageExtensions.cs" />
+    <Compile Include="Services\SqueezeNetHotDogRecognition.cs" />
+    <Compile Include="Resources\SqueezeNet.cs">
+      <DependentUpon>SqueezeNet.mlmodel</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Icon-60%403x.png" />
@@ -146,6 +150,12 @@
     <BundleResource Include="Resources\NotHotDog.mlmodelc\model.espresso.weights" />
     <BundleResource Include="Resources\NotHotDog.mlmodelc\model\coremldata.bin" />
     <BundleResource Include="Resources\NotHotDog.mlmodelc\neural_network_optionals\coremldata.bin" />
+    <BundleResource Include="Resources\SqueezeNet.mlmodelc\coremldata.bin" />
+    <BundleResource Include="Resources\SqueezeNet.mlmodelc\model.espresso.net" />
+    <BundleResource Include="Resources\SqueezeNet.mlmodelc\model.espresso.shape" />
+    <BundleResource Include="Resources\SqueezeNet.mlmodelc\model.espresso.weights" />
+    <BundleResource Include="Resources\SqueezeNet.mlmodelc\model\coremldata.bin" />
+    <BundleResource Include="Resources\SqueezeNet.mlmodelc\neural_network_optionals\coremldata.bin" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -260,6 +270,7 @@
   </ItemGroup>
   <ItemGroup>
     <CoreMLModel Include="Resources\NotHotDog.mlmodel" />
+    <CoreMLModel Include="Resources\SqueezeNet.mlmodel" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.3.4.0.1008975\build\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.3.4.0.1008975\build\Xamarin.Forms.targets')" />
