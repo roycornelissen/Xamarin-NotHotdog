@@ -77,14 +77,14 @@ namespace NotHotdog.ViewModels
                 Scanned = false;
                 await CrossMedia.Current.Initialize();
 
-                if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
-                {
-                    if (!CrossMedia.Current.IsPickPhotoSupported)
-                    {
+				if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+				{
+					if (!CrossMedia.Current.IsPickPhotoSupported)
+					{
 
-                    }
-                    return;
-                }
+						return;
+					}
+				}
 
                 IsBusy = true;
                 var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
@@ -169,11 +169,9 @@ namespace NotHotdog.ViewModels
 			await CrossShare.Current.Share(new ShareMessage
 			{
 				Title = "CFood App!",
-                Text = "I'm using the CFood app to see what food i'm eating! You have to try it!",
+				Text = "I'm using the CFood app to see what food i'm eating! You have to try it!",
 				Url = "https://mobilefirstcloudfirst.net/cfood-app/"
 			});
-
-			
 		}
 
 		ICommand githubCommand;

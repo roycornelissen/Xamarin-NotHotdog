@@ -18,7 +18,6 @@
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
-    <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidStoreUncompressedFileExtensions />
     <MandroidI18n />
@@ -106,9 +105,6 @@
     <Reference Include="Java.Interop" />
     <Reference Include="Plugin.Permissions">
       <HintPath>..\..\packages\Plugin.Permissions.3.0.0.12\lib\monoandroid71\Plugin.Permissions.dll</HintPath>
-    </Reference>
-    <Reference Include="Plugin.Media">
-      <HintPath>..\..\packages\Xam.Plugin.Media.4.0.1.5\lib\monoandroid71\Plugin.Media.dll</HintPath>
     </Reference>
     <Reference Include="Plugin.LocalNotifications.Abstractions">
       <HintPath>..\..\packages\Xam.Plugins.Notifier.3.0.1\lib\MonoAndroid10\Plugin.LocalNotifications.Abstractions.dll</HintPath>
@@ -209,11 +205,19 @@
     <Reference Include="Plugin.CurrentActivity">
       <HintPath>..\..\packages\Plugin.CurrentActivity.2.1.0.4\lib\monoandroid44\Plugin.CurrentActivity.dll</HintPath>
     </Reference>
+    <Reference Include="TensorFlowXamarin">
+      <HintPath>..\..\packages\Xam.Android.Tensorflow.1.0.0\lib\monoandroid60\TensorFlowXamarin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime" />
+    <Reference Include="Plugin.Media">
+      <HintPath>..\..\packages\Xam.Plugin.Media.4.0.1.5\lib\monoandroid71\Plugin.Media.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DroidHotDogRecognitionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -251,11 +255,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\xml\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\fontawesome-webfont.ttf" />
     <AndroidAsset Include="Assets\Dosis-Bold.ttf" />
     <AndroidAsset Include="Assets\Dosis-Light.ttf" />
+    <AndroidAsset Include="Assets\labels.txt" />
+    <AndroidAsset Include="Assets\model.pb" />
   </ItemGroup>
   <ItemGroup>
     <GoogleServicesJson Include="google-services.json" />

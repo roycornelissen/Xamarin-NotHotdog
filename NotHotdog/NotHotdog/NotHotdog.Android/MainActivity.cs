@@ -10,6 +10,8 @@ using Plugin.Permissions;
 using Microsoft.Azure.Mobile.Push;
 using Xamarin.Forms;
 using NotHotdog.Services;
+using NotHotdog.Droid.Services;
+using Plugin.CurrentActivity;
 
 namespace NotHotdog.Droid
 {
@@ -25,10 +27,10 @@ namespace NotHotdog.Droid
 
             base.OnCreate(bundle);
 
-            global::Xamarin.Forms.Forms.Init(this, bundle);
+			CrossCurrentActivity.Current.Init(this, bundle);
+			global::Xamarin.Forms.Forms.Init(this, bundle);
 
-			DependencyService.Register<ComputerVisionHotDogRecognitionService>();
-//			DependencyService.Register<CustomVisionHotDogRecognitionService>();
+			//DependencyService.Register<DroidHotDogRecognitionService>();
 
 			LoadApplication(new App());
         }
