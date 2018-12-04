@@ -7,6 +7,7 @@ using Microsoft.Azure.Mobile.Analytics;
 using Microsoft.Azure.Mobile.Crashes;
 using Microsoft.Azure.Mobile.Push;
 using NotHotdog.Constants;
+using NotHotdog.Services;
 using Plugin.LocalNotifications;
 using Xamarin.Forms;
 
@@ -16,14 +17,18 @@ namespace NotHotdog
     {
         public App()
         {
-            InitializeComponent();
+			InitializeComponent();
 
-            MainPage = new NavigationPage(new NotHotdog.MainPage());
+            DependencyService.Register<ComputerVisionHotDogRecognitionService>();
+			//DependencyService.Register<CustomVisionHotDogRecognitionService>();
+
+			MainPage = new NavigationPage(new NotHotdog.MainPage());
         }
 
         protected override void OnStart()
         {
-            MobileCenter.Start("android=" + ApiKeys.MOBILECENTER_DROID_KEY + ";" +
+
+			MobileCenter.Start("android=" + ApiKeys.MOBILECENTER_DROID_KEY + ";" +
                                "ios=" + ApiKeys.MOBILECENTER_IOS_KEY + ";",
 				   typeof(Analytics), typeof(Crashes), typeof(Push));
 

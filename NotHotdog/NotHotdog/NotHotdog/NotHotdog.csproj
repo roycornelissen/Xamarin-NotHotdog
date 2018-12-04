@@ -45,7 +45,7 @@
     <Compile Include="Model\CognitiveServiceJson\CognitiveServiceJsonResults.cs" />
     <Compile Include="Converters\InvertBooleanConverter.cs" />
     <Compile Include="Services\IHotDogRecognitionService.cs" />
-    <Compile Include="Services\HotDogRecognitionService.cs" />
+    <Compile Include="Services\ComputerVisionHotDogRecognitionService.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -53,6 +53,8 @@
       <DependentUpon>InfoPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\InfoViewModel.cs" />
+    <Compile Include="Services\CustomVisionHotDogRecognitionService.cs" />
+    <Compile Include="Model\CustomVisionJson\CustomVisionResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -78,6 +80,7 @@
     <Folder Include="Converters\" />
     <Folder Include="Services\" />
     <Folder Include="Views\" />
+    <Folder Include="Model\CustomVisionJson\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

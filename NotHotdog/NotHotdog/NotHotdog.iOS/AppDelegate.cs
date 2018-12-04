@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Foundation;
+using NotHotdog.iOS.Services;
+using NotHotdog.Services;
 using UIKit;
+using Xamarin.Forms;
 
 namespace NotHotdog.iOS
 {
@@ -23,7 +26,11 @@ namespace NotHotdog.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
-            LoadApplication(new App());
+
+			//DependencyService.Register<iOSHotDogRecognitionService>();
+			//DependencyService.Register<SqueezeNetHotDogRecognitionService>();
+
+			LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
         }
