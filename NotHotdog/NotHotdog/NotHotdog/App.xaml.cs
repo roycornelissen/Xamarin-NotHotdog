@@ -17,15 +17,16 @@ namespace NotHotdog
     {
         public App()
         {
-            InitializeComponent();
+			InitializeComponent();
 
-            MainPage = new NavigationPage(new NotHotdog.MainPage());
+            DependencyService.Register<ComputerVisionHotDogRecognitionService>();
+			//DependencyService.Register<CustomVisionHotDogRecognitionService>();
+
+			MainPage = new NavigationPage(new NotHotdog.MainPage());
         }
 
         protected override void OnStart()
         {
-			DependencyService.Register<ComputerVisionHotDogRecognitionService>();
-			//DependencyService.Register<CustomVisionHotDogRecognitionService>();
 
 			MobileCenter.Start("android=" + ApiKeys.MOBILECENTER_DROID_KEY + ";" +
                                "ios=" + ApiKeys.MOBILECENTER_IOS_KEY + ";",
