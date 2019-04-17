@@ -13,8 +13,8 @@ namespace NotHotdog.Droid.Services
 {
 	public class DroidHotDogRecognitionService : IHotDogRecognitionService
 	{
-		TensorFlowInferenceInterface inferenceInterface;
-		List<string> labels;
+		readonly TensorFlowInferenceInterface inferenceInterface;
+		readonly List<string> labels;
 
 		public DroidHotDogRecognitionService()
 		{
@@ -30,11 +30,11 @@ namespace NotHotdog.Droid.Services
 			}
 		}
 
-		public Task<RecognizedHotdog> CheckImageForDescription(byte[] imagesBytes)
+		public Task<RecognizedHotdog> CheckImageForDescription(Stream imageStream)
 		{
 			try
 			{
-				using (var bitmap = BitmapFactory.DecodeByteArray(imagesBytes, 0, imagesBytes.Length))
+				using (var bitmap = BitmapFactory.DecodeStream(imageStream))
 				using (var resizedBitmap = Bitmap.CreateScaledBitmap(bitmap, 227, 227, false)
 					  .Copy(Bitmap.Config.Argb8888, false))
 				{
@@ -79,7 +79,7 @@ namespace NotHotdog.Droid.Services
 					}
 				}
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				Console.WriteLine(ex);
 				return null;

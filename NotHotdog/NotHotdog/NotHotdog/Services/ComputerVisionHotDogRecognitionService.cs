@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -8,45 +9,48 @@ using NotHotdog.Model;
 namespace NotHotdog.Services
 {
 	public class ComputerVisionHotDogRecognitionService : IHotDogRecognitionService
-    {
-        public ComputerVisionHotDogRecognitionService()
-        {
-        }
+	{
+		private static readonly HttpClient httpClient = new HttpClient();
 
-		public async Task<RecognizedHotdog> CheckImageForDescription(byte[] imagesBytes)
+		public ComputerVisionHotDogRecognitionService()
 		{
-			HttpClient client = new HttpClient();
-			client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", Constants.ApiKeys.COMPUTERVISION_APIKEY);
+			httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", Constants.ApiKeys.COMPUTERVISION_APIKEY);
+		}
 
-			string uri = "https://westeurope.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Categories,Tags,Description&language=en";
-
-			HttpResponseMessage response;
-
-			using (ByteArrayContent content = new ByteArrayContent(imagesBytes))
+		public async Task<RecognizedHotdog> CheckImageForDescription(Stream imageStream)
+		{
+			using (var content = new StreamContent(imageStream))
 			{
-                //sent byte array to cognitive services API
-				content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-				response = await client.PostAsync(uri, content);
-
-                //read response as string and deserialize
-				string contentString = await response.Content.ReadAsStringAsync();
-				CognitiveResults apiresult = JsonConvert.DeserializeObject<CognitiveResults>(contentString);
-
-                //check if result contains word hotdog or parts of it
-				RecognizedHotdog recognizedHotdog = new RecognizedHotdog();
-				if (apiresult.description.tags.Any(t => t == "hotdog") || (apiresult.description.tags.Any(t => t == "hot") && apiresult.description.tags.Any(t => t == "dog")))
-				{
-					recognizedHotdog.Hotdog = true;
-				}
-				if (apiresult.description.captions.Any())
-				{
-					recognizedHotdog.Description = apiresult.description.captions.FirstOrDefault().text;
-					recognizedHotdog.Certainty = apiresult.description.captions.FirstOrDefault().confidence;
-				}
-				recognizedHotdog.Tags = apiresult.tags.Select(t => t.name).ToList();
-
-				return recognizedHotdog;
+				return await Evaluate(content).ConfigureAwait(false);
 			}
 		}
-    }
+
+		private static async Task<RecognizedHotdog> Evaluate(HttpContent content)
+		{
+			string uri = "https://westeurope.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Categories,Tags,Description&language=en";
+
+			//sent byte array to cognitive services API
+			content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+			var response = await httpClient.PostAsync(uri, content);
+
+			//read response as string and deserialize
+			string contentString = await response.Content.ReadAsStringAsync();
+			CognitiveResults apiresult = JsonConvert.DeserializeObject<CognitiveResults>(contentString);
+
+			//check if result contains word hotdog or parts of it
+			var recognizedHotdog = new RecognizedHotdog();
+			if (apiresult.description.tags.Any(t => t == "hotdog") || (apiresult.description.tags.Any(t => t == "hot") && apiresult.description.tags.Any(t => t == "dog")))
+			{
+				recognizedHotdog.Hotdog = true;
+			}
+			if (apiresult.description.captions.Any())
+			{
+				recognizedHotdog.Description = apiresult.description.captions.FirstOrDefault().text;
+				recognizedHotdog.Certainty = apiresult.description.captions.FirstOrDefault().confidence;
+			}
+			recognizedHotdog.Tags = apiresult.tags.Select(t => t.name).ToList();
+
+			return recognizedHotdog;
+		}
+	}
 }

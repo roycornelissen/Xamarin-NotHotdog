@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -13,56 +14,57 @@ namespace NotHotdog.Services
 {
 	public class CustomVisionHotDogRecognitionService : IHotDogRecognitionService
 	{
-		private static readonly HttpClient client = new HttpClient();
-		private const string predictionUrl = "https://southcentralus.api.cognitive.microsoft.com/customvision/v2.0/Prediction/95d44082-d30a-422b-a392-0ecf778809dc/image?iterationId=ba0ef288-a06b-4559-b7be-160e9f678d76";
+		private static readonly HttpClient client;
 
 		static CustomVisionHotDogRecognitionService()
 		{
-			client = new HttpClient
-			{
-				BaseAddress = new Uri(predictionUrl)
-			};
+			client = new HttpClient();
 			client.DefaultRequestHeaders.Add("Prediction-Key", Constants.ApiKeys.CUSTOMVISION_PREDICTIONKEY);
 		}
 
-		public async Task<RecognizedHotdog> CheckImageForDescription(byte[] imagesBytes)
+		public async Task<RecognizedHotdog> CheckImageForDescription(Stream imageStream)
 		{
-			using (ByteArrayContent content = new ByteArrayContent(imagesBytes))
+			using (var streamContent = new StreamContent(imageStream))
 			{
-				content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+				return await Evaluate(streamContent).ConfigureAwait(false);
+			}
+		}
 
-				var response = await client.PostAsync(predictionUrl, content);
-				string contentString = await response.Content.ReadAsStringAsync();
-				Debug.WriteLine(contentString);
+		private async Task<RecognizedHotdog> Evaluate(HttpContent content)
+		{
+			content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
-				var apiResponse = JsonConvert.DeserializeObject<CustomVisionResponse>(contentString);
-				if (apiResponse != null)
+			var response = await client.PostAsync(Constants.ApiKeys.CUSTOMVISION_PREDICTIONURL, content);
+			string contentString = await response.Content.ReadAsStringAsync();
+			Debug.WriteLine(contentString);
+
+			var apiResponse = JsonConvert.DeserializeObject<CustomVisionResponse>(contentString);
+			if (apiResponse != null)
+			{
+				if (apiResponse.Predictions?.Any() ?? false)
 				{
-					if (apiResponse.Predictions?.Any() ?? false)
+					var mostConfidence = apiResponse.Predictions.OrderByDescending(p => p.Probability).First();
+					if (mostConfidence.Probability > 0.75f && mostConfidence.TagName == "hotdog")
 					{
-						var mostConfidence = apiResponse.Predictions.OrderByDescending(p => p.Probability).First();
-						if (mostConfidence.Probability > 0.75f && mostConfidence.TagName == "hotdog")
+						return new RecognizedHotdog
 						{
-							return new RecognizedHotdog
-							{
-								Certainty = Convert.ToDouble(mostConfidence.Probability),
-								Categories = new List<string> { "Food" },
-								Description = "It's a hotdog",
-								Hotdog = true,
-								Tags = apiResponse.Predictions.Select(p => p.TagName).ToList()
-							};
-						}
+							Certainty = Convert.ToDouble(mostConfidence.Probability),
+							Categories = new List<string> { "Food" },
+							Description = "It's a hotdog",
+							Hotdog = true,
+							Tags = apiResponse.Predictions.Select(p => p.TagName).ToList()
+						};
 					}
 				}
-				return new RecognizedHotdog
-				{
-					Certainty = 0d,
-					Categories = new List<string> { "Unknown" },
-					Description = "It's not a hotdog; I don't know what this is",
-					Hotdog = false,
-					Tags = new List<string> { "unknown" }
-				};
 			}
+			return new RecognizedHotdog
+			{
+				Certainty = 0d,
+				Categories = new List<string> { "Unknown" },
+				Description = "It's not a hotdog; I don't know what this is",
+				Hotdog = false,
+				Tags = new List<string> { "unknown" }
+			};
 		}
 	}
 }

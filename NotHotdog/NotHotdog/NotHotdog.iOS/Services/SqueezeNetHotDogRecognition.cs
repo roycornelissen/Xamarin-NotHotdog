@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreGraphics;
@@ -14,13 +15,13 @@ namespace NotHotdog.iOS.Services
 	{
 		static readonly SqueezeNet model = new SqueezeNet();
 
-		public async Task<RecognizedHotdog> CheckImageForDescription(byte[] imagesBytes)
+		public async Task<RecognizedHotdog> CheckImageForDescription(Stream imageStream)
 		{
 			return await Task.Run(() =>
 			{
 				try
 				{
-					var image = UIImage.LoadFromData(NSData.FromArray(imagesBytes));
+					var image = UIImage.LoadFromData(NSData.FromStream(imageStream));
 					var buffer = image.Scale(new CGSize(227, 227)).ToCVPixelBuffer();
 
 					var output = model.GetPrediction(buffer, out NSError error);
@@ -33,7 +34,7 @@ namespace NotHotdog.iOS.Services
 					var isHotdog = output.ClassLabel.Contains("hotdog") || output.ClassLabel.Contains("hot dog");
 
 					var dict = new Dictionary<string, double>();
-					foreach(var item in output.ClassLabelProbs)
+					foreach (var item in output.ClassLabelProbs)
 					{
 						dict.Add(item.Key.ToString(), ((NSNumber)item.Value).DoubleValue);
 					}

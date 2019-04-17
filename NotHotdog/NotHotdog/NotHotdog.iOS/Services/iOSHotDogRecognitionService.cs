@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using CoreGraphics;
 using Foundation;
@@ -13,13 +14,13 @@ namespace NotHotdog.iOS.Services
 	{
 		static readonly NotHotDog model = new NotHotDog();
 
-		public async Task<RecognizedHotdog> CheckImageForDescription(byte[] imagesBytes)
+		public async Task<RecognizedHotdog> CheckImageForDescription(Stream imageStream)
 		{
 			return await Task.Run(() =>
 			{
 				try
 				{
-					var image = UIImage.LoadFromData(NSData.FromArray(imagesBytes));
+					var image = UIImage.LoadFromData(NSData.FromStream(imageStream));
 					var buffer = image.Scale(new CGSize(227, 227)).ToCVPixelBuffer();
 
 					var output = model.GetPrediction(buffer, out NSError error);

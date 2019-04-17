@@ -1,30 +1,24 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Microsoft.Azure.Mobile;
+using Microsoft.Azure.Mobile.Analytics;
 using MvvmHelpers;
-using Newtonsoft.Json;
 using NotHotdog.Model;
+using NotHotdog.Services;
 using Plugin.Media;
-using Xamarin.Forms;
-using System.Linq;
+using Plugin.Media.Abstractions;
 using Plugin.Share;
 using Plugin.Share.Abstractions;
-using Microsoft.Azure.Mobile.Analytics;
-using System.Collections.Generic;
-using Plugin.Media.Abstractions;
-using NotHotdog.Services;
-using Microsoft.Azure.Mobile;
+using Xamarin.Forms;
 
 namespace NotHotdog.ViewModels
 {
-    public class MainViewModel : BaseViewModel
+	public class MainViewModel : BaseViewModel
     {
-        IHotDogRecognitionService _hotdogRecognitionService;
-        INavigation _navigation;
+		readonly IHotDogRecognitionService _hotdogRecognitionService;
+		readonly INavigation _navigation;
 
         public MainViewModel(IHotDogRecognitionService hotdogRecognitionService, INavigation navigation)
         {
@@ -32,7 +26,7 @@ namespace NotHotdog.ViewModels
             _navigation = navigation;
         }
 
-        RecognizedHotdog hotdog = new RecognizedHotdog() { Hotdog = false };
+        RecognizedHotdog hotdog = new RecognizedHotdog { Hotdog = false };
         public RecognizedHotdog Hotdog
         {
             get { return hotdog; }
@@ -87,59 +81,52 @@ namespace NotHotdog.ViewModels
 				}
 
                 IsBusy = true;
-                var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+				using (var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+					{
+						PhotoSize = PhotoSize.Small,
+						Directory = "Sample",
+						Name = "test.jpg"
+					}))
 				{
-					PhotoSize = PhotoSize.Small,
-                    Directory = "Sample",
-                    Name = "test.jpg"
-                });
 
-                if (file == null)
-                    return;
+					if (file == null)
+						return;
 
-                Picture = ImageSource.FromStream(() =>
-                {
-                    var stream = file.GetStream();
-                    file.Dispose();
-                    return stream;
-                });
+					Picture = ImageSource.FromStream(() =>
+					{
+						var stream = file.GetStream();
+						return stream;
+					});
 
-                using (var stream = file.GetStream())
-				using (var binaryReader = new BinaryReader(stream))
-				{
-					var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
-					Hotdog = await _hotdogRecognitionService.CheckImageForDescription(imagesBytes);
+					using (var stream = file.GetStream())
+					{
+						Hotdog = await _hotdogRecognitionService.CheckImageForDescription(stream);
 
-                    if (Hotdog.Hotdog)
-                    {
-                        Analytics.TrackEvent("Hotdog Scanned", new Dictionary<string, string> {
-                                { "Description", Hotdog.Description},
-                                { "Certainty", Hotdog.Certainty.ToString() }});
-                    }
-                    else
-                    {
-                        string tags = "";
-                        foreach (var Tag in Hotdog.Tags)
-                        {
-                            tags += Tag.ToString() + ", ";
+						if (Hotdog.Hotdog)
+						{
+							Analytics.TrackEvent("Hotdog Scanned", new Dictionary<string, string> {
+								{ "Description", Hotdog.Description},
+								{ "Certainty", Hotdog.Certainty.ToString() }});
+						}
+						else
+						{
+							var tags = string.Join(", ", Hotdog.Tags);
+							Analytics.TrackEvent("Not Hotdog Scanned", new Dictionary<string, string> {
+								{ "Description", Hotdog.Description},
+								{ "Certainty", Hotdog.Certainty.ToString()},
+								{ "Tags", tags}});
+						}
 
-                        }
-                        Analytics.TrackEvent("Not Hotdog Scanned", new Dictionary<string, string> {
-                                { "Description", Hotdog.Description},
-                                { "Certainty", Hotdog.Certainty.ToString()},
-                                { "Tags", tags}});
-                    }
+						if (Hotdog.Tags.Count > 0)
+						{
+							CustomProperties properties = new CustomProperties();
+							properties.Set("tag", hotdog.Tags[0]);
+							MobileCenter.SetCustomProperties(properties);
+						}
 
-                    if (Hotdog.Tags.Count > 0)
-                    {
-                        CustomProperties properties = new CustomProperties();
-                        properties.Set("tag", hotdog.Tags[0]);
-                        MobileCenter.SetCustomProperties(properties);
-                    }
-					
-                    Scanned = true;
-                }
-
+						Scanned = true;
+					}
+				}
             }
             catch (Exception ex)
             {
@@ -196,9 +183,6 @@ namespace NotHotdog.ViewModels
             await _navigation.PushAsync(new Views.InfoPage());
 		}
 
-
-
-
 		ICommand pickImageCommand;
 		public ICommand PickImageCommand =>
 			pickImageCommand ?? (pickImageCommand = new Command(async () => await ExecutePickImageAsync()));
@@ -214,56 +198,48 @@ namespace NotHotdog.ViewModels
                 if (CrossMedia.Current.IsPickPhotoSupported)
                 {
                     IsBusy = true;
-					var photo = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions(){ PhotoSize = PhotoSize.Small });
-
-                    if (photo == null)
-                    {
-                        return;
-                    }
-
-                    Picture = ImageSource.FromStream(() =>
-                    {
-                        var stream = photo.GetStream();
-                        photo.Dispose();
-                        return stream;
-                    });
-
-                    using (var stream = photo.GetStream())
-                    {
-                        BinaryReader binaryReader = new BinaryReader(stream);
-                        var imagesBytes = binaryReader.ReadBytes((int)stream.Length);
-
-                        Hotdog = await _hotdogRecognitionService.CheckImageForDescription(imagesBytes);
-                        if(Hotdog.Hotdog)
-                        {
-                            Analytics.TrackEvent("Hotdog Scanned", new Dictionary<string, string> {
-                                { "Description", Hotdog.Description},
-                                { "Certainty", Hotdog.Certainty.ToString() }});
-                        }
-                        else
-                        {
-                            string tags = "";
-                            foreach(var Tag in Hotdog.Tags)
-                            {
-                                tags += Tag.ToString() + ", ";
-                                
-                            }
-                            Analytics.TrackEvent("Not Hotdog Scanned", new Dictionary<string, string> {
-                                { "Description", Hotdog.Description},
-                                { "Certainty", Hotdog.Certainty.ToString()},
-                                { "Tags", tags}});
-                        }
-
-						if (Hotdog.Tags.Count > 0)
+					using (var photo = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions() { PhotoSize = PhotoSize.Small }))
+					{
+						if (photo == null)
 						{
-							CustomProperties properties = new CustomProperties();
-							properties.Set("tag", hotdog.Tags[0]);
-							MobileCenter.SetCustomProperties(properties);
+							return;
 						}
 
-                        Scanned = true;
-                    }
+						Picture = ImageSource.FromStream(() =>
+						{
+							var stream = photo.GetStream();
+							return stream;
+						});
 
+						using (var stream = photo.GetStream())
+						{
+							Hotdog = await _hotdogRecognitionService.CheckImageForDescription(stream);
+							if (Hotdog.Hotdog)
+							{
+								Analytics.TrackEvent("Hotdog Scanned", new Dictionary<string, string> {
+								{ "Description", Hotdog.Description},
+								{ "Certainty", Hotdog.Certainty.ToString() }});
+							}
+							else
+							{
+								var tags = string.Join(", ", Hotdog.Tags);
+
+								Analytics.TrackEvent("Not Hotdog Scanned", new Dictionary<string, string> {
+									{ "Description", Hotdog.Description},
+									{ "Certainty", Hotdog.Certainty.ToString()},
+									{ "Tags", tags}});
+							}
+
+							if (Hotdog.Tags.Count > 0)
+							{
+								CustomProperties properties = new CustomProperties();
+								properties.Set("tag", hotdog.Tags[0]);
+								MobileCenter.SetCustomProperties(properties);
+							}
+
+							Scanned = true;
+						}
+					}
                 }
             }
             catch (Exception ex)
@@ -279,8 +255,6 @@ namespace NotHotdog.ViewModels
                 IsBusy = false;
             }
 		}
-
-
 
 #endregion
     }
