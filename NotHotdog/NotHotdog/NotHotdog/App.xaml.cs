@@ -19,8 +19,8 @@ namespace NotHotdog
         {
 			InitializeComponent();
 
-			DependencyService.Register<CustomVisionHotDogRecognitionService>();
-			//DependencyService.Register<ComputerVisionHotDogRecognitionService>();
+			//DependencyService.Register<CustomVisionHotDogRecognitionService>();
+			DependencyService.Register<ComputerVisionHotDogRecognitionService>();
 
 			MainPage = new NavigationPage(new NotHotdog.MainPage());
         }
