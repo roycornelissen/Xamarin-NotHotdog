@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Microsoft.Azure.Mobile;
-using Microsoft.Azure.Mobile.Analytics;
-using MvvmHelpers;
+﻿using MvvmHelpers;
 using NotHotdog.Model;
 using NotHotdog.Services;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Plugin.Share;
 using Plugin.Share.Abstractions;
+using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace NotHotdog.ViewModels
 {
-	public class MainViewModel : BaseViewModel
+    public class MainViewModel : BaseViewModel
     {
 		readonly IHotDogRecognitionService _hotdogRecognitionService;
 		readonly INavigation _navigation;
@@ -101,29 +98,6 @@ namespace NotHotdog.ViewModels
 					using (var stream = file.GetStream())
 					{
 						Hotdog = await _hotdogRecognitionService.CheckImageForDescription(stream);
-
-						if (Hotdog.Hotdog)
-						{
-							Analytics.TrackEvent("Hotdog Scanned", new Dictionary<string, string> {
-								{ "Description", Hotdog.Description},
-								{ "Certainty", Hotdog.Certainty.ToString() }});
-						}
-						else
-						{
-							var tags = string.Join(", ", Hotdog.Tags);
-							Analytics.TrackEvent("Not Hotdog Scanned", new Dictionary<string, string> {
-								{ "Description", Hotdog.Description},
-								{ "Certainty", Hotdog.Certainty.ToString()},
-								{ "Tags", tags}});
-						}
-
-						if (Hotdog.Tags.Count > 0)
-						{
-							CustomProperties properties = new CustomProperties();
-							properties.Set("tag", hotdog.Tags[0]);
-							MobileCenter.SetCustomProperties(properties);
-						}
-
 						Scanned = true;
 					}
 				}
@@ -131,10 +105,6 @@ namespace NotHotdog.ViewModels
             catch (Exception ex)
             {
                 Error = true;  
-				Analytics.TrackEvent("Exception while checking image from Camera", new Dictionary<string, string> {
-                    { "Exception", ex.Message },
-                    { "Exception Type", ex.GetType().ToString() },
-                    { "StackTrace", ex.StackTrace}});
             }
             finally
             {
@@ -150,8 +120,6 @@ namespace NotHotdog.ViewModels
 		{
 			if (!CrossShare.IsSupported)
 				return;
-
-            Analytics.TrackEvent("Share button");
 
 			await CrossShare.Current.Share(new ShareMessage
 			{
@@ -170,7 +138,6 @@ namespace NotHotdog.ViewModels
 			if (!CrossShare.IsSupported)
 				return;
 
-            Analytics.TrackEvent("open github event");
 			await CrossShare.Current.OpenBrowser("https://github.com/Geertvdc/Xamarin-NotHotdog");
 		}
 
@@ -214,29 +181,6 @@ namespace NotHotdog.ViewModels
 						using (var stream = photo.GetStream())
 						{
 							Hotdog = await _hotdogRecognitionService.CheckImageForDescription(stream);
-							if (Hotdog.Hotdog)
-							{
-								Analytics.TrackEvent("Hotdog Scanned", new Dictionary<string, string> {
-								{ "Description", Hotdog.Description},
-								{ "Certainty", Hotdog.Certainty.ToString() }});
-							}
-							else
-							{
-								var tags = string.Join(", ", Hotdog.Tags);
-
-								Analytics.TrackEvent("Not Hotdog Scanned", new Dictionary<string, string> {
-									{ "Description", Hotdog.Description},
-									{ "Certainty", Hotdog.Certainty.ToString()},
-									{ "Tags", tags}});
-							}
-
-							if (Hotdog.Tags.Count > 0)
-							{
-								CustomProperties properties = new CustomProperties();
-								properties.Set("tag", hotdog.Tags[0]);
-								MobileCenter.SetCustomProperties(properties);
-							}
-
 							Scanned = true;
 						}
 					}
@@ -245,10 +189,6 @@ namespace NotHotdog.ViewModels
             catch (Exception ex)
             {
                 Error = true;
-				Analytics.TrackEvent("Exception while picking file from library", new Dictionary<string, string> {
-					{ "Exception", ex.Message },
-					{ "Exception Type", ex.GetType().ToString() },
-					{ "StackTrace", ex.StackTrace}});
             }
             finally
             {
