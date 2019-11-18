@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿
 using Foundation;
-using NotHotdog.iOS.Services;
-using NotHotdog.Services;
 using UIKit;
-using Xamarin.Forms;
 
 namespace NotHotdog.iOS
 {

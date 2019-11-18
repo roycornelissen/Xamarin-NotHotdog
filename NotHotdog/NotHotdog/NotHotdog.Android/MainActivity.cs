@@ -1,17 +1,9 @@
-﻿using System;
-
+﻿
 using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
-using Plugin.Permissions;
-using Microsoft.Azure.Mobile.Push;
-using Xamarin.Forms;
-using NotHotdog.Services;
-using NotHotdog.Droid.Services;
 using Plugin.CurrentActivity;
+using Plugin.Permissions;
 
 namespace NotHotdog.Droid
 {
@@ -38,12 +30,6 @@ namespace NotHotdog.Droid
 		public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
 		{
 			PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-		}
-
-		protected override void OnNewIntent(Android.Content.Intent intent)
-		{
-			base.OnNewIntent(intent);
-            Push.CheckLaunchedFromNotification(this, intent);
 		}
     }
 }
