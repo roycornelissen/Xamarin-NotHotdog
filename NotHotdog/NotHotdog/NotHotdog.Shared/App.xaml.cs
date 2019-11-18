@@ -12,7 +12,7 @@ namespace NotHotdog
 			//DependencyService.Register<CustomVisionHotDogRecognitionService>();
 			DependencyService.Register<ComputerVisionHotDogRecognitionService>();
 
-			MainPage = new NavigationPage(new NotHotdog.MainPage());
+			MainPage = new NavigationPage(new MainPage());
         }
 
         protected override void OnStart()
