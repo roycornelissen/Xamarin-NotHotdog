@@ -1,9 +1,11 @@
-﻿
+
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using NotHotdog.Droid.Services;
 using Plugin.CurrentActivity;
 using Plugin.Permissions;
+using Xamarin.Forms;
 
 namespace NotHotdog.Droid
 {

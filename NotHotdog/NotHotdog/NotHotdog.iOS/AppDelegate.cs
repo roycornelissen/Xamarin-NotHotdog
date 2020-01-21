@@ -1,6 +1,8 @@
-﻿
+
 using Foundation;
+using NotHotdog.iOS.Services;
 using UIKit;
+using Xamarin.Forms;
 
 namespace NotHotdog.iOS
 {
